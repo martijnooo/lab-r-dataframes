@@ -1,0 +1,120 @@
+```{r}
+
+superstore <- read.csv("dataset/Sample - Superstore.csv")
+
+```
+
+```{r}
+# Display the first 10 rows of the dataframe using the head() function.
+head(superstore)
+names(superstore)
+```
+```{r}
+# Use the str() function to inspect the structure of the dataframe. What are the data types of the columns?
+str(superstore)
+
+```
+```{r}
+#Use the summary() function to get a summary of the dataframe. What insights can you gather from the summary?
+summary(superstore)
+```
+```{r}
+# Extract the Sales column as a vector using the $ operator.
+superstore$Sales
+
+```
+
+```{r}
+# Subset the first 15 rows and the columns Order ID, Customer Name, and Sales.
+df <- superstore[1:15,] %>%
+  select(Order.ID, Customer.Name, Sales)
+
+print(df)
+
+```
+
+```{r}
+# Use the nrow() and ncol() functions to determine the number of rows and columns in the dataframe.
+nrow(superstore)
+ncol(superstore)
+```
+
+```{r}
+# Filter the dataframe to show only rows where the Profit is greater than 100.
+
+superstore_profit <- superstore[superstore$Profit > 100, ]
+```
+
+```{r}
+# Filter the dataframe to show only rows where the Category is "Furniture" and the Sales are greater than 500.
+superstore_filter <- superstore[superstore$Category == "Furniture" & superstore$Sales > 500, ]
+```
+
+```{r}
+# Filter the dataframe to show only rows where the Region is "West" and the Quantity is greater than 5.
+superstore_filter2 <- superstore[superstore$Region == "West" & superstore$Quantity > 5, ]
+
+```
+
+```{r}
+# Add a new column called Profit Margin that calculates the profit margin as (Profit / Sales) * 100.
+superstore <- mutate(superstore, Profit.Margin = (Profit / Sales)*100)
+```
+
+```{r}
+# Modify the Sales column by rounding the values to 2 decimal places.
+superstore <- mutate(superstore,Sales = round(Sales,digits=2))
+print(superstore$Sales)
+```
+
+```{r}
+#remove the Postal Code column from the dataframe using the subset() or select() function.
+#superstore$Postal.Code <- NULL
+superstore_no_postal <- select(superstore, -Postal.Code)
+names(superstore_no_postal)
+
+```
+
+```{r}
+# Check for missing values in the dataframe using the is.na() function. Are there any missing values?
+any(is.na(superstore))
+```
+
+```{r}
+#If there are missing values, remove rows with missing data using the na.omit() function.
+na.omit(superstore)
+```
+
+```{r}
+# Replace any missing values in the Sales column with the mean of the Sales column using the na.fill() function.
+
+na.fill(superstore$Sales, fill = mean(superstore$sales, na.rm = TRUE))
+
+```
+
+```{r}
+#Group the dataframe by Region and calculate the total Sales and Profit for each region.
+superstore2 <- superstore %>%
+  group_by(Region) %>%
+  summarise(Profit = sum(Profit), Sales = sum(Sales))
+print(superstore2)
+```
+
+```{r}
+#Create a new column called Discount Level that categorizes the Discount column into:
+#"Low" (0-0.2)
+#"Medium" (0.2-0.5)
+#"High" (0.5-1)
+
+superstore <- superstore %>%
+  mutate(Discount.Level = ifelse (Discount < 0.02, "Low",
+         ifelse(Discount >0.5, "High", "Medium")))
+
+```
+
+```{r}
+# Sort the dataframe by Sales in descending order.
+superstore <- superstore %>%
+  arrange(desc(Sales))
+print(superstore)
+```
